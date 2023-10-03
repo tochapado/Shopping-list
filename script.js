@@ -13,7 +13,6 @@ function addItem(e) {
 	const button = createButton('remove-item btn-link text-red');
 	const i = createIcon('fa-solid fa-xmark'); 
 
-
 	li.textContent = newItem; 
 	li.appendChild(button);
 
