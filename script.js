@@ -3,6 +3,8 @@ const itemInput = document.querySelector('#item-input');
 const itemList = document.querySelector('#item-list');
 const itemFilter = document.querySelector('#filter');
 const clearBtn = document.querySelector('#clear');
+const formBtn = itemForm.querySelector('button');
+let isEditMode = false;
 
 function displayItems() {
 	const items = getItemsFromStorage();
@@ -19,6 +21,15 @@ function addItem(e) {
 	const newItem = itemInput.value;
 
 	if(newItem === '') return alert('Please add an item');
+
+	if(isEditMode) {
+		const itemToEdit = itemList.querySelector('[data-edit="true"]');
+
+		removeItemFromStorage(itemToEdit.textContent);
+		itemToEdit.dataset.edit = 'false';
+		itemToEdit.remove();
+		isEditMode = false;
+	};	
 
 	addItemToDOM(newItem);
 	addItemToStorage(newItem);
@@ -77,7 +88,23 @@ function getItemsFromStorage() {
 };
 
 function onClickItem(e) {
-	if(e.target.parentElement.classList.contains('remove-item')) removeItem(e);
+	if(e.target.parentElement.classList.contains('remove-item')) return removeItem(e);
+
+	setItemToEdit(e.target);	
+};
+
+function setItemToEdit(item) {
+	isEditMode = true;
+	allItems = itemList.querySelectorAll('li');
+	for(let i = 0; i < allItems.length; i++) {
+		allItems[i].style.backgroundColor = '';	
+		allItems[i].dataset.edit = 'false';
+	};
+	item.style.backgroundColor = '#555';
+	item.dataset.edit = 'true'
+	formBtn.innerHTML = '<i class="fa-solid fa-pen"></i>  Update Item';
+	formBtn.style.backgroundColor = '#2a2';
+	itemInput.value = item.textContent;
 };
 
 function removeItem(e) {
@@ -126,6 +153,8 @@ function clearItemsFromStorage() {
 };
 
 function checkUI() {
+	itemInput.value = '';
+
 	const items = itemList.querySelectorAll('li');
 	if(items.length === 0) {
 		itemFilter.style.display = 'none';
@@ -134,6 +163,10 @@ function checkUI() {
 		itemFilter.style.display = 'block';
 		clearBtn.style.display = 'block';
 	};
+
+	formBtn.innerHTML = '<i class="fa-solid fa-plus"></i>  AddItem';
+	formBtn.style.backgroundColor = '#333';
+	isEditMode = false;
 };
 
 function filterItems(e) {
