@@ -43,7 +43,7 @@ function createIcon(classes) {
 
 function removeItem(e) {
 	if(e.target.parentElement.classList.contains('remove-item')) {
-		e.target.parentElement.parentElement.remove();
+		if(confirm('Are you sure?')) e.target.parentElement.parentElement.remove();
 	};	
 	checkUI();
 };
@@ -56,7 +56,8 @@ function clearItems() {
 };
 
 function checkUI() {
-	if(itemList.children.length === 0) {
+	const items = itemList.querySelectorAll('li');
+	if(items.length === 0) {
 		itemFilter.style.display = 'none';
 		clearBtn.style.display = 'none';
 	} else {
