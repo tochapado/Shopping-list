@@ -22,6 +22,12 @@ function addItem(e) {
 
 	if(newItem === '') return alert('Please add an item');
 
+	if(checkIfItemExists(newItem)) {
+		alert('Item already exists!');
+		checkUI();
+		return;
+	};
+
 	if(isEditMode) {
 		const itemToEdit = itemList.querySelector('[data-edit="true"]');
 
@@ -29,7 +35,7 @@ function addItem(e) {
 		itemToEdit.dataset.edit = 'false';
 		itemToEdit.remove();
 		isEditMode = false;
-	};	
+	};
 
 	addItemToDOM(newItem);
 	addItemToStorage(newItem);
@@ -91,6 +97,12 @@ function onClickItem(e) {
 	if(e.target.parentElement.classList.contains('remove-item')) return removeItem(e);
 
 	setItemToEdit(e.target);	
+};
+
+function checkIfItemExists(item) {
+	const itemsFromStorage = getItemsFromStorage();
+
+	return itemsFromStorage.includes(item);
 };
 
 function setItemToEdit(item) {
